@@ -12,6 +12,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	_ "github.com/libsql/libsql-client-go/libsql"
+	_ "modernc.org/sqlite"
 )
 
 type album struct {
@@ -29,16 +30,17 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	dbName := os.Getenv("DB_NAME")
-	token := os.Getenv("DB_TOKEN")
+	//	dbName := os.Getenv("DB_NAME")
+	//	token := os.Getenv("DB_TOKEN")
 
-	var dbUrl = fmt.Sprintf("libsql://%s.turso.io?authToken=%s", dbName, token)
+	//	var dbUrl = fmt.Sprintf("libsql://%s.turso.io?authToken=%s", dbName, token)
+
+	var dbUrl = os.Getenv("LOCAL_DB_PATH")
 
 	var err error
 	db, err = sql.Open("libsql", dbUrl)
 	if err != nil {
 		log.Fatal("failed to open db ", dbUrl, err)
-		os.Exit(1)
 	}
 	router := gin.Default()
 	router.GET("/albums", getAlbums)
